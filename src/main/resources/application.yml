@@ -1,0 +1,24 @@
+server:
+  error:
+    include-stacktrace: never
+  servlet:
+    context-path: /api
+
+spring:
+  datasource:
+    url:
+    username:
+    password:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  jpa:
+    properties:
+      hibernate:
+        connection:
+          autocommit: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
