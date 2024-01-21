@@ -5,10 +5,14 @@ server:
     context-path: /api
 
 spring:
+  application:
+    name: task-service
+  config:
+    import: optional:configtree:/run/secrets/
   datasource:
     url:
     username:
-    password:
+    password: ${db-password}
   jackson:
     property-naming-strategy: SNAKE_CASE
   jpa:
@@ -22,3 +26,19 @@ spring:
           batch_size: 20
         order_inserts: true
         order_updates: true
+    hibernate:
+      ddl-auto: update
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    discovery:
+      simple:
+        client:
+          instances:
+            identity-service[0]:
+              uri: http://localhost:9000
+
+custom:
+  group:
+    page_size: 20
