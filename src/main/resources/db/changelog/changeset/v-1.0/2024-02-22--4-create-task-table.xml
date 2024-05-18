@@ -1,0 +1,43 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2024-02-22-create-task-table-4" author="Ineffable">
+        <preConditions onFail="HALT">
+            <not>
+                <tableExists tableName="tasks"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="tasks">
+            <column name="task_id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="difficulty" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="required_solver_count" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="published_by" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk__tasks__group_id" referencedTableName="groups" referencedColumnNames="group_id"/>
+            </column>
+            <column name="task_list_id" type="uuid">
+                <constraints foreignKeyName="fk__tasks__task_list_id" referencedTableName="task_lists" referencedColumnNames="task_list_id"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,31 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2024-02-22-create-task_list-table-3" author="Ineffable">
+        <preConditions onFail="HALT">
+            <not>
+                <tableExists tableName="task_lists"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="task_lists">
+            <column name="task_list_id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="published_by" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk__task_lists__group_id" referencedTableName="groups" referencedColumnNames="group_id"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

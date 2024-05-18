@@ -1,4 +1,4 @@
-package com.tasklab.taskservice.service;
+package com.tasklab.taskservice.service.group;
 
 import com.tasklab.taskservice.dto.request.GroupCreateRequest;
 import com.tasklab.taskservice.entity.Group;
@@ -15,12 +15,13 @@ public class GroupFacadeService {
 
     private final GroupService groupService;
     private final GroupUserDetailsService groupUserDetailsService;
-
     @Transactional
-    public void createGroup(GroupCreateRequest request, UUID userId) {
+    public Group createGroup(GroupCreateRequest request, UUID userId) {
         groupService.assertGroupNameUnique(request.getName());
         Group group = groupService.persistGroup(request);
         groupUserDetailsService.persistGroupUserDetails(group, GroupRole.OWNER, userId);
+
+        return group;
     }
 }
 

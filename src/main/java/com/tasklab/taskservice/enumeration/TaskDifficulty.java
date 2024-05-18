@@ -5,10 +5,10 @@ import com.tasklab.taskservice.util.EnumUtil;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum GroupJoinAccess implements Named {
-    PUBLIC("public"),
-    PRIVATE("private"),
-    CLOSED("closed");
+public enum TaskDifficulty implements Named {
+    EASY("easy"),
+    MEDIUM("medium"),
+    HARD("hard");
 
     private final String name;
 
@@ -18,7 +18,7 @@ public enum GroupJoinAccess implements Named {
         return name;
     }
 
-    public static GroupJoinAccess getByName(String srcName) {
+    public static TaskDifficulty getByName(String srcName) {
         return EnumUtil.getByName(srcName, values());
     }
 }

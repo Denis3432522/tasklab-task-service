@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-stateful-set
+  namespace: task-service
+  labels:
+    app: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: postgres-service
+  replicas: 2
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: postgres
+          image: postgres:alpine3.18
+          env:
+            - name: POSTGRES_PASSWORD
+              value: test
+          ports:
+            - containerPort: 5432
+              name: postgres-port
+          volumeMounts:
+            - name: db-pvc
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: db-pvc
+      spec:
+        volumeMode: Filesystem
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

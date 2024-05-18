@@ -3,16 +3,19 @@ server:
     include-stacktrace: never
   servlet:
     context-path: /api
-
+  port: 8090
 spring:
   application:
     name: task-service
-  config:
-    import: optional:configtree:/run/secrets/
   datasource:
     url:
     username:
-    password: ${db-password}
+    password:
+  liquibase:
+    change-log: classpath:db/changelog/db-changelog-master.xml
+    enabled: true
+    default-schema: public
+
   jackson:
     property-naming-strategy: SNAKE_CASE
   jpa:
@@ -22,23 +25,19 @@ spring:
           autocommit: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        jdbc:
-          batch_size: 20
-        order_inserts: true
-        order_updates: true
     hibernate:
-      ddl-auto: update
-  cloud:
-    loadbalancer:
-      ribbon:
-        enabled: false
-    discovery:
-      simple:
-        client:
-          instances:
-            identity-service[0]:
-              uri: http://localhost:9000
+      ddl-auto: validate
+  data:
+    redis:
+      host:
+      port:
+  main:
+    banner-mode: off
 
-custom:
+app:
+  default:
+    page_size: 20
   group:
     page_size: 20
+  task:
+    page-size: 20

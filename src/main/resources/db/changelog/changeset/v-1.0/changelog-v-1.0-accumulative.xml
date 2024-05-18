@@ -1,0 +1,10 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <include file="db/changelog/changeset/v-1.0/2024-02-22--1-create-group-table.xml"/>
+    <include file="db/changelog/changeset/v-1.0/2024-02-22--2-create-group_user_details-table.xml"/>
+    <include file="db/changelog/changeset/v-1.0/2024-02-22--3-create-task_list-table.xml"/>
+    <include file="db/changelog/changeset/v-1.0/2024-02-22--4-create-task-table.xml"/>
+    <include file="db/changelog/changeset/v-1.0/2024-02-22--5-create-task_progress-table.xml"/>
+</databaseChangeLog>

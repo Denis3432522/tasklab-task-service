@@ -1,0 +1,37 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+   <changeSet id="2024-02-22-create-group-table-1" author="Ineffable">
+       <preConditions onFail="HALT">
+           <not>
+               <tableExists tableName="groups"/>
+           </not>
+       </preConditions>
+       
+       <createTable tableName="groups">
+           <column name="group_id" type="uuid">
+               <constraints primaryKey="true"/>
+           </column>
+           <column name="name" type="varchar(255)">
+               <constraints unique="true" nullable="false"/>
+           </column>
+           <column name="maximum_size" type="integer">
+               <constraints nullable="false"/>
+           </column>
+           <column name="join_access" type="varchar(255)">
+               <constraints nullable="false"/>
+           </column>
+           <column name="solved_task_count" type="integer">
+               <constraints nullable="false"/>
+           </column>
+           <column name="failed_task_count" type="integer">
+               <constraints nullable="false"/>
+           </column>
+           <column name="size" type="integer">
+               <constraints nullable="false"/>
+           </column>
+       </createTable>
+   </changeSet>
+</databaseChangeLog>
