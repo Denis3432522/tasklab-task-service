@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface GroupUserDetailsRepository extends JpaRepository<GroupUserDetails, UUID> {
 
     Optional<GroupUserDetails> findByGroupIdAndUserId(UUID groupId, UUID userId);
+
+    boolean existsByGroupIdAndUserId(UUID groupId, UUID userId);
 }

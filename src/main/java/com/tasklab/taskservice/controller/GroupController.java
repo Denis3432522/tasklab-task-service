@@ -4,13 +4,21 @@ import com.tasklab.taskservice.config.props.GroupProps;
 import com.tasklab.taskservice.dto.request.GroupCreateRequest;
 import com.tasklab.taskservice.dto.request.GroupPatchRequest;
 import com.tasklab.taskservice.dto.response.GroupView;
+import com.tasklab.taskservice.dto.response.IdResponse;
+import com.tasklab.taskservice.entity.Group;
+import com.tasklab.taskservice.entity.GroupUserDetails;
+import com.tasklab.taskservice.entity.Task;
 import com.tasklab.taskservice.enumeration.GroupRole;
-import com.tasklab.taskservice.service.GroupAccessAuthorizer;
-import com.tasklab.taskservice.service.GroupFacadeService;
-import com.tasklab.taskservice.service.GroupService;
+import com.tasklab.taskservice.repository.GroupRepository;
+import com.tasklab.taskservice.repository.GroupUserDetailsRepository;
+import com.tasklab.taskservice.repository.TaskRepository;
+import com.tasklab.taskservice.service.group.GroupAccessAuthorizer;
+import com.tasklab.taskservice.service.group.GroupFacadeService;
+import com.tasklab.taskservice.service.group.GroupService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,8 +41,9 @@ public class GroupController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGroup(@RequestBody @Valid GroupCreateRequest request, @RequestHeader("Subject") UUID userId) {
-        groupFacadeService.createGroup(request, userId);
+    public IdResponse createGroup(@RequestBody @Valid GroupCreateRequest request, @RequestHeader("Subject") UUID userId) {
+        var group = groupFacadeService.createGroup(request, userId);
+        return IdResponse.of(group.getId());
     }
 
     @GetMapping
@@ -51,7 +60,7 @@ public class GroupController {
 
     @PatchMapping("/{id}")
     public void patchGroup(@RequestBody @Valid GroupPatchRequest request, @PathVariable UUID id, @RequestHeader("Subject") UUID userId) {
-        groupAccessAuthorizer.authorizeUserForGroup(id, userId, List.of(GroupRole.OWNER, GroupRole.MANAGER));
+        groupAccessAuthorizer.authorizeUserForGroup(id, userId, List.of(GroupRole.OWNER, GroupRole.ADMIN));
         groupService.changeGroup(request, id);
     }
 }

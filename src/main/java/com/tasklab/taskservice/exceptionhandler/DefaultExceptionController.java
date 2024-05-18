@@ -10,8 +10,10 @@ import com.tasklab.taskservice.util.LoggerMessagePreparer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,6 +39,15 @@ public class DefaultExceptionController {
         }
 
         return new ErrorResponse("invalid field values", errors);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        log.error(LoggerMessagePreparer.prepareErrorMessage(ex, HttpStatus.BAD_REQUEST));
+        return ErrorResponse.builder()
+                .errorMessage("invalid data format")
+                .build();
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -66,6 +77,12 @@ public class DefaultExceptionController {
                 .orElse(new ErrorResponse("You are not authorized to perform this operation"));
     }
 
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public void handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+        log.debug(LoggerMessagePreparer.prepareErrorMessage(ex, HttpStatus.NOT_FOUND));
+    }
+
     @ExceptionHandler(InternalServerErrorException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleInternalServerErrorException(InternalServerErrorException ex) {
@@ -78,7 +95,13 @@ public class DefaultExceptionController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         log.error(LoggerMessagePreparer.prepareErrorMessage(ex, HttpStatus.INTERNAL_SERVER_ERROR));
+        return InternalErrorResponse.DEFAULT;
+    }
 
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleExceptionByFallback(Throwable ex) {
+        log.error(LoggerMessagePreparer.prepareErrorMessage(ex, HttpStatus.INTERNAL_SERVER_ERROR));
         return InternalErrorResponse.DEFAULT;
     }
 }

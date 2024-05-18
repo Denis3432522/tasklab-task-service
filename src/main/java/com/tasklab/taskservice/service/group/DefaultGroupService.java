@@ -1,4 +1,4 @@
-package com.tasklab.taskservice.service;
+package com.tasklab.taskservice.service.group;
 
 import com.tasklab.taskservice.dto.request.GroupCreateRequest;
 import com.tasklab.taskservice.dto.request.GroupPatchRequest;
@@ -12,6 +12,7 @@ import com.tasklab.taskservice.exception.BadRequestException;
 import com.tasklab.taskservice.exception.ResourceNotFoundException;
 import com.tasklab.taskservice.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -24,10 +25,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DefaultGroupService implements GroupService {
 
     private final GroupValidator groupValidator;
     private final GroupRepository groupRepository;
+   // private final CacheManager cacheManager;
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
@@ -47,8 +50,19 @@ public class DefaultGroupService implements GroupService {
     }
 
     @Override
+    public void assertGroupExistsById(UUID groupId) {
+        if(!groupRepository.existsById(groupId))
+            throw new ResourceNotFoundException(ResourceNotFoundResponse.of("Group with ID " + groupId));
+    }
+
+    @Override
     public List<GroupView> getPublicGroupViews(Pageable pageable) {
         return groupRepository.findAllViewsByJoinAccess(GroupJoinAccess.PUBLIC, pageable);
+    }
+
+    @Override
+    public Group getGroupReferenceById(UUID groupId) {
+        return groupRepository.getReferenceById(groupId);
     }
 
     @Override

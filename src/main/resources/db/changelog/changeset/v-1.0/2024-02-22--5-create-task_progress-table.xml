@@ -1,0 +1,26 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2024-02-22-create-task_progress-table-5" author="Ineffable">
+        <preConditions onFail="HALT">
+            <not>
+                <tableExists tableName="task_progresses"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="task_progresses">
+            <column name="task_id" type="uuid">
+                <constraints primaryKey="true" foreignKeyName="fk__task_progresses__task_id" referencedTableName="tasks" referencedColumnNames="task_id"/>
+            </column>
+            <column name="time_to_solve" type="numeric(21,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="started_at" type="timestamp with timezone"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

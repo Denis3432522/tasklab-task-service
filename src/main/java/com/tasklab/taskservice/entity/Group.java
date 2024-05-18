@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
+import org.hibernate.annotations.Fetch;
 
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class Group {
     private int maximumSize;
 
     @Column(name = "join_access", nullable = false)
+    @Enumerated(EnumType.STRING)
     private GroupJoinAccess joinAccess;
 
     @Column(name = "solved_task_count", nullable = false)

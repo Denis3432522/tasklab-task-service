@@ -1,4 +1,4 @@
-package com.tasklab.taskservice.service;
+package com.tasklab.taskservice.service.group;
 
 import com.tasklab.taskservice.enumeration.GroupRole;
 import com.tasklab.taskservice.exception.AccessDeniedException;
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class GroupAccessAuthorizer {
+public class DefaultGroupAccessAuthorizer implements GroupAccessAuthorizer {
 
     private final GroupUserDetailsRepository groupUserRepository;
 
@@ -23,7 +23,12 @@ public class GroupAccessAuthorizer {
                 .orElseThrow(AccessDeniedException::new)
                 .getRole();
 
-        if(authorizedRoles.stream().noneMatch(r -> r.equals(groupRole)))
+        if(authorizedRoles.stream().noneMatch(groupRole::equals))
+            throw new AccessDeniedException();
+    }
+
+    public void assertUserInGroup(UUID groupId, UUID userId) {
+        if(!groupUserRepository.existsByGroupIdAndUserId(groupId, userId))
             throw new AccessDeniedException();
     }
 }
